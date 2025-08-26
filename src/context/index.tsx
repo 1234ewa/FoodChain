@@ -9,26 +9,23 @@ import { cookieToInitialState, WagmiProvider, type Config } from 'wagmi'
 // Set up queryClient
 const queryClient = new QueryClient()
 
-// Set up metadata
-const metadata = {
-  name: 'next-reown-appkit',
-  description: 'next-reown-appkit',
-  url: 'https://github.com/0xonerb/next-reown-appkit-ssr', // origin must match your domain & subdomain
-  icons: ['https://avatars.githubusercontent.com/u/179229932']
-}
-
 // Create the modal
 export const modal = createAppKit({
   adapters: [wagmiAdapter],
   projectId,
   networks,
-  metadata,
+  metadata: {
+    name: 'FoodChain',
+    description: 'Aplicación de delivery de alimentos con blockchain',
+    url: 'http://localhost:3000',
+    icons: ['http://localhost:3000/icon.png']
+  },
   themeMode: 'light',
   features: {
-    analytics: true // Optional - defaults to your Cloud configuration
+    analytics: true
   },
   themeVariables: {
-    '--w3m-accent': '#000000',
+    '--w3m-accent': '#5034c4', // Usar el color lila de FoodChain
   }
 })
 
@@ -36,8 +33,10 @@ function ContextProvider({ children, cookies }: { children: ReactNode; cookies: 
   const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config, cookies)
 
   return (
-    <WagmiProvider config={wagmiAdapter.wagmiConfig as Config} initialState={initialState}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <WagmiProvider config={wagmiAdapter.wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
     </WagmiProvider>
   )
 }

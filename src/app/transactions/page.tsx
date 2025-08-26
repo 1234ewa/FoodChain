@@ -2,36 +2,58 @@
 
 import { useState } from 'react';
 import { ConnectButton } from "@/components/ConnectButton";
+import { useAccount } from 'wagmi';
 import Image from 'next/image';
 
 export default function TransactionsPage() {
   const [activeTab, setActiveTab] = useState('transactions');
+  const { address, isConnected } = useAccount();
 
-  // Datos de ejemplo para las transacciones (se llenarán con datos reales)
+  // Formatear la dirección de la wallet
+  const formatAddress = (addr: string) => {
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+  };
+
+  // Datos de ejemplo para las transacciones con Monad Testnet
   const transactions = [
     {
       id: 1,
       product: "Manzanas Rojas",
       date: "2024-01-15 14:30:25",
       ethValue: "0.002",
+      usdValue: "3.5",
+      quantity: "1 kg",
       hash: "0x57a8b9c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0",
-      status: "completed"
+      blockNumber: "1234567",
+      location: "Nave I-J - Local 45",
+      status: "completed",
+      network: "Monad Testnet"
     },
     {
       id: 2,
       product: "Tomates Orgánicos",
       date: "2024-01-14 09:15:42",
       ethValue: "0.003",
+      usdValue: "4.2",
+      quantity: "1 kg",
       hash: "0x12b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3",
-      status: "completed"
+      blockNumber: "1234566",
+      location: "Nave M-N - Local 112",
+      status: "completed",
+      network: "Monad Testnet"
     },
     {
       id: 3,
       product: "Plátanos",
       date: "2024-01-13 16:45:18",
       ethValue: "0.0015",
+      usdValue: "2.8",
+      quantity: "1 kg",
       hash: "0x34c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
-      status: "completed"
+      blockNumber: "1234565",
+      location: "Nave K-L - Local 78",
+      status: "completed",
+      network: "Monad Testnet"
     }
   ];
 
@@ -55,10 +77,12 @@ export default function TransactionsPage() {
           <div className="header-right">
             <div className="user-profile">
               <div className="profile-avatar">
-                <span className="avatar-initial">U</span>
+                <span className="avatar-initial">{isConnected ? '🔗' : 'U'}</span>
               </div>
               <div className="profile-info">
-                <span className="user-name">Usuario</span>
+                <span className="user-name">
+                  {isConnected && address ? 'Wallet Conectada' : 'No conectado'}
+                </span>
                 <div className="progress-container">
                   <div className="progress-bar">
                     <div className="progress-fill" style={{ width: '60%' }}></div>
@@ -69,7 +93,9 @@ export default function TransactionsPage() {
             </div>
             <div className="wallet-info">
               <div className="wallet-balance">0.000 MON</div>
-              <div className="wallet-address">0x57...eFE2A0</div>
+              <div className="wallet-address">
+                {isConnected && address ? formatAddress(address) : 'No conectada'}
+              </div>
             </div>
             <ConnectButton />
           </div>
@@ -108,12 +134,37 @@ export default function TransactionsPage() {
                   <span className="detail-value">{transaction.date}</span>
                 </div>
                 <div className="transaction-row">
-                  <span className="detail-label">VALOR EN ETH:</span>
-                  <span className="detail-value eth-value">{transaction.ethValue} ETH</span>
+                  <span className="detail-label">CANTIDAD:</span>
+                  <span className="detail-value">{transaction.quantity}</span>
+                </div>
+                <div className="transaction-row">
+                  <span className="detail-label">VALOR:</span>
+                  <span className="detail-value eth-value">{transaction.ethValue} MON (${transaction.usdValue})</span>
+                </div>
+                <div className="transaction-row">
+                  <span className="detail-label">UBICACIÓN:</span>
+                  <span className="detail-value location">{transaction.location}</span>
+                </div>
+                <div className="transaction-row">
+                  <span className="detail-label">RED:</span>
+                  <span className="detail-value network">{transaction.network}</span>
+                </div>
+                <div className="transaction-row">
+                  <span className="detail-label">BLOQUE:</span>
+                  <span className="detail-value">#{transaction.blockNumber}</span>
                 </div>
                 <div className="transaction-row">
                   <span className="detail-label">HASH:</span>
-                  <span className="detail-value hash-value">{transaction.hash}</span>
+                  <span className="detail-value hash-value">
+                    <a 
+                      href={`https://testnet.monadexplorer.com/tx/${transaction.hash}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="hash-link"
+                    >
+                      {transaction.hash}
+                    </a>
+                  </span>
                 </div>
               </div>
             </div>

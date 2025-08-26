@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { ConnectButton } from "@/components/ConnectButton";
+import { useAccount } from 'wagmi';
 import { InfoList } from "@/components/InfoList";
 import { ActionButtonList } from "@/components/ActionButtonList";
+import { ImpactDashboard } from "@/components/ImpactDashboard";
 import Image from 'next/image';
 
 export default function Home() {
@@ -11,8 +13,33 @@ export default function Home() {
   const [showMain, setShowMain] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
   const [activeCategory, setActiveCategory] = useState('todas');
+  const { address, isConnected } = useAccount();
 
-  // Productos con sus categorías (13 productos total)
+  // Formatear la dirección de la wallet
+  const formatAddress = (addr: string) => {
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+  };
+
+  // Tracking de eventos para analytics
+  useEffect(() => {
+    if (isConnected && address) {
+      console.log('🔗 Wallet conectada:', address);
+      // Aquí se pueden enviar eventos a analytics
+    }
+  }, [isConnected, address]);
+
+  // Tracking de interacciones de usuario
+  const handleProductClick = (productId: number, productName: string) => {
+    console.log('🛒 Producto clickeado:', productName, 'ID:', productId);
+    // Evento de tracking para analytics
+  };
+
+  const handleCategoryFilter = (category: string) => {
+    console.log('📂 Categoría seleccionada:', category);
+    // Evento de tracking para analytics
+  };
+
+  // Productos con sus categorías (13 productos total) - Precios en pesos mexicanos
   const products = [
     {
       id: 1,
@@ -22,8 +49,9 @@ export default function Home() {
       reviews: 128,
       category: "Frutas Frescas",
       categoryFilter: "frutas",
-      ethPrice: "0.002",
-      usdPrice: "3.5"
+      originalPrice: "85.00",
+      discountPrice: "68.00",
+      discount: "20%"
     },
     {
       id: 2,
@@ -33,8 +61,9 @@ export default function Home() {
       reviews: 95,
       category: "Frutas Frescas",
       categoryFilter: "frutas",
-      ethPrice: "0.0015",
-      usdPrice: "2.8"
+      originalPrice: "65.00",
+      discountPrice: "52.00",
+      discount: "20%"
     },
     {
       id: 3,
@@ -44,8 +73,9 @@ export default function Home() {
       reviews: 203,
       category: "Verduras Orgánicas",
       categoryFilter: "verduras",
-      ethPrice: "0.003",
-      usdPrice: "4.2"
+      originalPrice: "120.00",
+      discountPrice: "96.00",
+      discount: "20%"
     },
     {
       id: 4,
@@ -55,8 +85,9 @@ export default function Home() {
       reviews: 87,
       category: "Verduras Frescas",
       categoryFilter: "verduras",
-      ethPrice: "0.0018",
-      usdPrice: "2.1"
+      originalPrice: "45.00",
+      discountPrice: "36.00",
+      discount: "20%"
     },
     {
       id: 5,
@@ -66,8 +97,9 @@ export default function Home() {
       reviews: 156,
       category: "Frutas Frescas",
       categoryFilter: "frutas",
-      ethPrice: "0.0025",
-      usdPrice: "3.8"
+      originalPrice: "95.00",
+      discountPrice: "76.00",
+      discount: "20%"
     },
     {
       id: 6,
@@ -77,8 +109,9 @@ export default function Home() {
       reviews: 92,
       category: "Verduras Frescas",
       categoryFilter: "verduras",
-      ethPrice: "0.0012",
-      usdPrice: "1.9"
+      originalPrice: "35.00",
+      discountPrice: "28.00",
+      discount: "20%"
     },
     {
       id: 7,
@@ -88,8 +121,9 @@ export default function Home() {
       reviews: 134,
       category: "Frutas Frescas",
       categoryFilter: "frutas",
-      ethPrice: "0.0032",
-      usdPrice: "4.8"
+      originalPrice: "130.00",
+      discountPrice: "104.00",
+      discount: "20%"
     },
     {
       id: 8,
@@ -99,8 +133,9 @@ export default function Home() {
       reviews: 78,
       category: "Frutas Frescas",
       categoryFilter: "frutas",
-      ethPrice: "0.0028",
-      usdPrice: "4.0"
+      originalPrice: "110.00",
+      discountPrice: "88.00",
+      discount: "20%"
     },
     {
       id: 9,
@@ -110,8 +145,9 @@ export default function Home() {
       reviews: 65,
       category: "Frutas Frescas",
       categoryFilter: "frutas",
-      ethPrice: "0.0035",
-      usdPrice: "5.2"
+      originalPrice: "140.00",
+      discountPrice: "112.00",
+      discount: "20%"
     },
     {
       id: 10,
@@ -121,8 +157,9 @@ export default function Home() {
       reviews: 112,
       category: "Frutas Frescas",
       categoryFilter: "frutas",
-      ethPrice: "0.004",
-      usdPrice: "6.0"
+      originalPrice: "160.00",
+      discountPrice: "128.00",
+      discount: "20%"
     },
     {
       id: 11,
@@ -132,8 +169,9 @@ export default function Home() {
       reviews: 89,
       category: "Verduras Frescas",
       categoryFilter: "verduras",
-      ethPrice: "0.0022",
-      usdPrice: "3.3"
+      originalPrice: "75.00",
+      discountPrice: "60.00",
+      discount: "20%"
     },
     {
       id: 12,
@@ -143,8 +181,9 @@ export default function Home() {
       reviews: 156,
       category: "Verduras Frescas",
       categoryFilter: "verduras",
-      ethPrice: "0.0018",
-      usdPrice: "2.7"
+      originalPrice: "55.00",
+      discountPrice: "44.00",
+      discount: "20%"
     },
     {
       id: 13,
@@ -154,8 +193,9 @@ export default function Home() {
       reviews: 98,
       category: "Verduras Frescas",
       categoryFilter: "verduras",
-      ethPrice: "0.0025",
-      usdPrice: "3.7"
+      originalPrice: "85.00",
+      discountPrice: "68.00",
+      discount: "20%"
     }
   ];
 
@@ -210,10 +250,12 @@ export default function Home() {
           <div className="header-right">
             <div className="user-profile">
               <div className="profile-avatar">
-                <span className="avatar-initial">U</span>
+                <span className="avatar-initial">{isConnected ? '🔗' : 'U'}</span>
               </div>
               <div className="profile-info">
-                <span className="user-name">Usuario</span>
+                <span className="user-name">
+                  {isConnected && address ? formatAddress(address) : 'No conectado'}
+                </span>
                 <div className="progress-container">
                   <div className="progress-bar">
                     <div className="progress-fill" style={{ width: '60%' }}></div>
@@ -227,30 +269,40 @@ export default function Home() {
         </div>
       </header>
 
-      
+      {/* Impact Dashboard */}
+      <ImpactDashboard />
 
       {/* Categories Section */}
       <section className="categories-section">
         <h2 className="section-title">Categorías</h2>
         <div className="categories-buttons">
-          <button 
-            className={`category-btn ${activeCategory === 'todas' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('todas')}
-          >
-            Todas
-          </button>
-          <button 
-            className={`category-btn ${activeCategory === 'frutas' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('frutas')}
-          >
-            Frutas
-          </button>
-          <button 
-            className={`category-btn ${activeCategory === 'verduras' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('verduras')}
-          >
-            Verduras
-          </button>
+                     <button 
+             className={`category-btn ${activeCategory === 'todas' ? 'active' : ''}`}
+             onClick={() => {
+               setActiveCategory('todas');
+               handleCategoryFilter('todas');
+             }}
+           >
+             Todas
+           </button>
+           <button 
+             className={`category-btn ${activeCategory === 'frutas' ? 'active' : ''}`}
+             onClick={() => {
+               setActiveCategory('frutas');
+               handleCategoryFilter('frutas');
+             }}
+           >
+             Frutas
+           </button>
+           <button 
+             className={`category-btn ${activeCategory === 'verduras' ? 'active' : ''}`}
+             onClick={() => {
+               setActiveCategory('verduras');
+               handleCategoryFilter('verduras');
+             }}
+           >
+             Verduras
+           </button>
         </div>
       </section>
 
@@ -270,10 +322,19 @@ export default function Home() {
                 </div>
                 <div className="product-category">{product.category}</div>
                 <div className="price-container">
-                  <span className="eth-price">{product.ethPrice} ETH</span>
-                  <span className="usd-price">${product.usdPrice}</span>
+                  <div className="price-row">
+                    <span className="original-price">${product.originalPrice} MXN</span>
+                    <span className="discount-badge">{product.discount} OFF</span>
+                  </div>
+                  <div className="final-price">
+                    <span className="discount-price">${product.discountPrice} MXN</span>
+                    <span className="savings">Ahorras ${(parseFloat(product.originalPrice) - parseFloat(product.discountPrice)).toFixed(2)}</span>
+                  </div>
                 </div>
-                                 <button className="location-btn" onClick={() => window.location.href = `/location/${product.id}`}>IR</button>
+                                 <button className="location-btn" onClick={() => {
+                   handleProductClick(product.id, product.name);
+                   window.location.href = `/location/${product.id}`;
+                 }}>IR</button>
               </div>
             </div>
           ))}

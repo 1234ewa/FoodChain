@@ -25,7 +25,7 @@ export const monadTestnet: Chain = {
 // Get projectId from https://cloud.reown.com
 export const projectId =
   process.env.NEXT_PUBLIC_PROJECT_ID ||
-  'b56e18d47c72ab683b10814fe9495694' // ProjectId público solo para localhost
+  '4718f02657ef3dd5ff72a24e0879819b' // ProjectId público solo para localhost
 
 // Agregar Monad Testnet a la lista de redes
 export const networks = [mainnet, arbitrum, monadTestnet] as [AppKitNetwork, ...AppKitNetwork[]]

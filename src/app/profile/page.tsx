@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ConnectButton } from "@/components/ConnectButton";
 import { useAccount } from 'wagmi';
+import { ImpactDashboard } from "@/components/ImpactDashboard";
 import Image from 'next/image';
 
 export default function ProfilePage() {
@@ -97,6 +98,11 @@ export default function ProfilePage() {
                </div>
              </div>
         </div>
+      </section>
+
+      {/* Impact Dashboard - Featured Section */}
+      <section className="impact-section">
+        <ImpactDashboard />
       </section>
 
       {/* Summary Cards */}
